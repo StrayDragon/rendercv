@@ -3,6 +3,10 @@
 // State to hold rendercv configuration for use by components
 #let rendercv-config = state("rendercv-config", (:))
 
+// Studio (cvxresume) debug toggles: enable clickable regions in SVG preview.
+#let cvxresume-studio = sys.inputs.at("cvxresume_studio", default: "0") == "1"
+#let cvxresume-link(kind, body) = if cvxresume-studio { link("cvxresume://" + kind, body) } else { body }
+
 // Direction-aware inset: maps logical start/end to physical left/right.
 // Must be called from within a `context` scope.
 #let directional-inset(start: 0cm, end: 0cm) = {
@@ -32,10 +36,13 @@
       weight: if typography-bold-headline { 700 } else { 400 },
     )
     set align(header-alignment)
-    block(
-      if typography-small-caps-headline { smallcaps(headline) } else { headline },
-      width: 100%,
-      height: auto,
+    cvxresume-link(
+      "header.headline",
+      block(
+        if typography-small-caps-headline { smallcaps(headline) } else { headline },
+        width: 100%,
+        height: auto,
+      ),
     )
     v(header-space-below-headline, weak: true)
   }
@@ -78,35 +85,38 @@
     )
     if connections.pos().len() > 0 {
       set align(header-alignment)
-      box(
-        {
-          layout(size => {
-            let line-width = 0cm
-            for (i, connection) in connections.pos().enumerate() {
-              let connection-body = if typography-small-caps-connections { smallcaps(connection) } else { connection }
-              let connection-width = measure(connection-body).width
-              let is-last = i == connections.pos().len() - 1
+      cvxresume-link(
+        "header.connections",
+        box(
+          {
+            layout(size => {
+              let line-width = 0cm
+              for (i, connection) in connections.pos().enumerate() {
+                let connection-body = if typography-small-caps-connections { smallcaps(connection) } else { connection }
+                let connection-width = measure(connection-body).width
+                let is-last = i == connections.pos().len() - 1
 
-              // Check if adding this connection + separator would exceed the line
-              if (
-                line-width + connection-width + separator-width > size.width and line-width > 0cm
-              ) {
-                linebreak()
-                line-width = 0cm
+                // Check if adding this connection + separator would exceed the line
+                if (
+                  line-width + connection-width + separator-width > size.width and line-width > 0cm
+                ) {
+                  linebreak()
+                  line-width = 0cm
+                }
+
+                // Add separator only if we're not at the start of a line
+                if line-width > 0cm {
+                  separator
+                }
+
+                box(connection-body, width: auto)
+                line-width = line-width + connection-width + (if line-width > 0cm { separator-width } else { 0cm })
               }
-
-              // Add separator only if we're not at the start of a line
-              if line-width > 0cm {
-                separator
-              }
-
-              box(connection-body, width: auto)
-              line-width = line-width + connection-width + (if line-width > 0cm { separator-width } else { 0cm })
-            }
-          })
-        },
-        width: 100%,
-        height: auto,
+            })
+          },
+          width: 100%,
+          height: auto,
+        ),
       )
     }
     v(header-space-below-connections - section-titles-space-above)
@@ -209,12 +219,15 @@
     body-indent: entries-highlights-space-between-bullet-and-text,
   )
 
-  block(
-    content,
-    breakable: entries-allow-page-break,
-    below: sections-space-between-text-based-entries + typography-line-spacing,
-    inset: directional-inset(start: start-space, end: entries-side-space),
-    width: 100%,
+  cvxresume-link(
+    "entries",
+    block(
+      content,
+      breakable: entries-allow-page-break,
+      below: sections-space-between-text-based-entries + typography-line-spacing,
+      inset: directional-inset(start: start-space, end: entries-side-space),
+      width: 100%,
+    ),
   )
 }
 
@@ -284,42 +297,45 @@
       leading: typography-line-spacing,
       justify: justify,
     )
-    block(
-      {
-        if section-titles-type == "moderncv" {
-          grid(
-            columns: (entries-date-and-location-width, 1fr),
-            column-gutter: entries-space-between-columns,
-            align: (typography-date-and-location-column-alignment, start-align),
-            [
-              #date-and-location-column
-            ],
-            [
-              #main-column
-
-              #main-column-second-row
-            ],
-          )
-        } else {
-          if repr(main-column) != "[ ]" or repr(date-and-location-column) != "[ ]" {
+    cvxresume-link(
+      "entries",
+      block(
+        {
+          if section-titles-type == "moderncv" {
             grid(
-              columns: (1fr, entries-date-and-location-width),
+              columns: (entries-date-and-location-width, 1fr),
               column-gutter: entries-space-between-columns,
-              align: (start-align, typography-date-and-location-column-alignment),
-              main-column, date-and-location-column,
+              align: (typography-date-and-location-column-alignment, start-align),
+              [
+                #date-and-location-column
+              ],
+              [
+                #main-column
+
+                #main-column-second-row
+              ],
             )
+          } else {
+            if repr(main-column) != "[ ]" or repr(date-and-location-column) != "[ ]" {
+              grid(
+                columns: (1fr, entries-date-and-location-width),
+                column-gutter: entries-space-between-columns,
+                align: (start-align, typography-date-and-location-column-alignment),
+                main-column, date-and-location-column,
+              )
+            }
+            set align(start-align)
+            main-column-second-row
           }
-          set align(start-align)
-          main-column-second-row
-        }
-      },
-      breakable: entries-allow-page-break,
-      below: sections-space-between-regular-entries + typography-line-spacing,
-      inset: (
-        left: entries-side-space,
-        right: entries-side-space,
+        },
+        breakable: entries-allow-page-break,
+        below: sections-space-between-regular-entries + typography-line-spacing,
+        inset: (
+          left: entries-side-space,
+          right: entries-side-space,
+        ),
+        width: 100%,
       ),
-      width: 100%,
     )
   }
 }
@@ -580,7 +596,7 @@
   )
 
   // Main heading (name):
-  #show heading.where(level: 1): it => [
+  #show heading.where(level: 1): it => cvxresume-link("header.name", [
     #set par(spacing: 0pt)
     #set align(header-alignment)
     #set text(
@@ -598,10 +614,10 @@
     #body
     // Vertical space after the name
     #v(header-space-below-name, weak: true)
-  ]
+  ])
 
   // Section titles:
-  #show heading.where(level: 2): it => [
+  #show heading.where(level: 2): it => cvxresume-link("section_titles", [
     #let is-centered = section-titles-type in ("centered_without_line", "centered_with_partial_line", "centered_with_centered_partial_line", "centered_with_full_line")
     #set align(if is-centered { center } else { start-align })
     #set text(size: (1em / 1.2)) // reset
@@ -680,7 +696,7 @@
 
     // Vertical space after the section title
     #v(section-titles-space-below - 0.5em)
-  ]
+  ])
 
   // Top note:
   #if page-show-top-note and top-note != none and top-note != "" {
