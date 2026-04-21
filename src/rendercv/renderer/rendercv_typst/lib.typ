@@ -290,7 +290,7 @@
       context if list-depth.get() == 2 {
         v(entries-highlights-space-between-items)
       }
-      l
+      cvxresume-link("entries.highlights", l)
     }
     set par(
       spacing: typography-line-spacing,
