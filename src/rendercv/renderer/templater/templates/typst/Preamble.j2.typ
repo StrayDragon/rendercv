@@ -62,6 +62,7 @@
   section-titles-space-above: {{ design.section_titles.space_above }},
   section-titles-space-below: {{ design.section_titles.space_below }},
   sections-allow-page-break: {{ design.sections.allow_page_break|lower }},
+  sections-page-break-before: ({% for title in design.sections.page_break_before %}"{{ title }}"{% if not loop.last %}, {% endif %}{% endfor %}),
   sections-space-between-text-based-entries: {{ design.sections.space_between_text_based_entries }},
   sections-space-between-regular-entries: {{ design.sections.space_between_regular_entries }},
   entries-date-and-location-width: {{ design.entries.date_and_location_width }},

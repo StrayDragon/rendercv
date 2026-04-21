@@ -446,6 +446,7 @@
   section-titles-space-above: 0.5cm,
   section-titles-space-below: 0.3cm,
   sections-allow-page-break: true,
+  sections-page-break-before: (),
   sections-space-between-text-based-entries: 0.3em,
   sections-space-between-regular-entries: 1.2em,
   entries-date-and-location-width: 4.15cm,
@@ -539,6 +540,7 @@
     section-titles-space-below: section-titles-space-below,
     // Sections
     sections-allow-page-break: sections-allow-page-break,
+    sections-page-break-before: sections-page-break-before,
     sections-space-between-regular-entries: sections-space-between-regular-entries,
     sections-space-between-text-based-entries: sections-space-between-text-based-entries,
     // Entries
@@ -753,7 +755,18 @@
   ]
 
   // Render sections as before
-  #for (section-title, section-content) in grouped.sections [
+  #for (section-index, section) in grouped.sections.enumerate() [
+    #let (section-title, section-content) = section
+    #let should-page-break = if section-index > 0 {
+      let title-text = if section-title.body.func() == text {
+        section-title.body.text
+      } else {
+        repr(section-title.body)
+      }
+      let key = lower(title-text.trim()).replace(" ", "_")
+      key in sections-page-break-before
+    } else { false }
+    #if should-page-break [#pagebreak()]
     #section-title
     #let should-skip = {
       let skip = false

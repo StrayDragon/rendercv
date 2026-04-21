@@ -477,6 +477,16 @@ class Sections(BaseModelWithoutExtraKeys):
             " start on a new page. The default value is `true`."
         ),
     )
+    page_break_before: list[str] = pydantic.Field(
+        default_factory=list,
+        description=(
+            "Section titles where a page break should be inserted before the section"
+            " title (so the section starts at the top of a new page). Titles are"
+            " matched against the section key/title converted to snake_case."
+            " The default value is an empty list."
+        ),
+        examples=[["education"], ["Experience", "Projects"], ["教育背景", "项目经历"]],
+    )
     space_between_regular_entries: TypstDimension = pydantic.Field(
         default="1.2em",
         description=(
@@ -505,6 +515,11 @@ class Sections(BaseModelWithoutExtraKeys):
     @pydantic.field_validator("show_time_spans_in", mode="after")
     @classmethod
     def convert_section_titles_to_snake_case(cls, value: list[str]) -> list[str]:
+        return [section_title.lower().replace(" ", "_") for section_title in value]
+
+    @pydantic.field_validator("page_break_before", mode="after")
+    @classmethod
+    def convert_page_break_before_titles_to_snake_case(cls, value: list[str]) -> list[str]:
         return [section_title.lower().replace(" ", "_") for section_title in value]
 
 
