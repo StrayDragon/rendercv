@@ -5,6 +5,7 @@
 
 // Studio (cvxresume) debug toggles: enable clickable regions in SVG preview.
 #let cvxresume-studio = sys.inputs.at("cvxresume_studio", default: "0") == "1"
+#let cvxresume-studio-detail = sys.inputs.at("cvxresume_studio_detail", default: "0") == "1"
 #let cvxresume-link(kind, body) = if cvxresume-studio { link("cvxresume://" + kind, body) } else { body }
 
 // Direction-aware inset: maps logical start/end to physical left/right.
@@ -218,16 +219,15 @@
     spacing: sections-space-between-text-based-entries + typography-line-spacing,
     body-indent: entries-highlights-space-between-bullet-and-text,
   )
-  show list.item: i => cvxresume-link("entries.highlights.item", i)
+  show list.item: i => if cvxresume-studio-detail { cvxresume-link("entries.highlights.item", i) } else { i }
   show list: l => cvxresume-link("entries.highlights", l)
-  show enum.item: i => cvxresume-link("entries.numbered.item", i)
+  show enum.item: i => if cvxresume-studio-detail { cvxresume-link("entries.numbered.item", i) } else { i }
   show enum: e => cvxresume-link("entries.numbered", e)
-  show par: p => cvxresume-link("entries.text", p)
 
   cvxresume-link(
     "entries",
     block(
-      content,
+      cvxresume-link("entries.text", content),
       breakable: entries-allow-page-break,
       below: sections-space-between-text-based-entries + typography-line-spacing,
       inset: directional-inset(start: start-space, end: entries-side-space),
@@ -285,7 +285,8 @@
     let list-depth = state("list-depth", 0)
     show list.item: i => {
       list-depth.update(d => d + 1)
-      cvxresume-link("entries.highlights.item", i)
+      let body = if cvxresume-studio-detail { cvxresume-link("entries.highlights.item", i) } else { i }
+      body
       list-depth.update(d => d - 1)
     }
     show list: l => {
