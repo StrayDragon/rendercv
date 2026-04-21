@@ -218,6 +218,11 @@
     spacing: sections-space-between-text-based-entries + typography-line-spacing,
     body-indent: entries-highlights-space-between-bullet-and-text,
   )
+  show list.item: i => cvxresume-link("entries.highlights.item", i)
+  show list: l => cvxresume-link("entries.highlights", l)
+  show enum.item: i => cvxresume-link("entries.numbered.item", i)
+  show enum: e => cvxresume-link("entries.numbered", e)
+  show par: p => cvxresume-link("entries.text", p)
 
   cvxresume-link(
     "entries",
@@ -237,11 +242,11 @@
     let entries-summary-space-left = config.at("entries-summary-space-left")
     let entries-summary-space-above = config.at("entries-summary-space-above")
     let typography-line-spacing = config.at("typography-line-spacing")
-    block(
+    cvxresume-link("entries.summary", block(
       summary,
       inset: directional-inset(start: entries-summary-space-left),
       above: entries-summary-space-above + typography-line-spacing,
-    )
+    ))
   }
 }
 
@@ -280,7 +285,7 @@
     let list-depth = state("list-depth", 0)
     show list.item: i => {
       list-depth.update(d => d + 1)
-      i
+      cvxresume-link("entries.highlights.item", i)
       list-depth.update(d => d - 1)
     }
     show list: l => {
@@ -297,6 +302,13 @@
       leading: typography-line-spacing,
       justify: justify,
     )
+    let cvx-main-column = cvxresume-link("entries.main_column", main-column)
+    let cvx-date-and-location-column = cvxresume-link("entries.date_and_location_column", date-and-location-column)
+    let cvx-main-column-second-row = if main-column-second-row != none and repr(main-column-second-row) != "[ ]" {
+      cvxresume-link("entries.main_column_second_row", main-column-second-row)
+    } else {
+      main-column-second-row
+    }
     cvxresume-link(
       "entries",
       block(
@@ -307,12 +319,12 @@
               column-gutter: entries-space-between-columns,
               align: (typography-date-and-location-column-alignment, start-align),
               [
-                #date-and-location-column
+                #cvx-date-and-location-column
               ],
               [
-                #main-column
+                #cvx-main-column
 
-                #main-column-second-row
+                #cvx-main-column-second-row
               ],
             )
           } else {
@@ -321,11 +333,11 @@
                 columns: (1fr, entries-date-and-location-width),
                 column-gutter: entries-space-between-columns,
                 align: (start-align, typography-date-and-location-column-alignment),
-                main-column, date-and-location-column,
+                cvx-main-column, cvx-date-and-location-column,
               )
             }
             set align(start-align)
-            main-column-second-row
+            cvx-main-column-second-row
           }
         },
         breakable: entries-allow-page-break,
@@ -629,13 +641,14 @@
       weight: if typography-bold-section-titles { 700 } else { 400 },
       fill: colors-section-titles,
     )
-    #let section-title = (
+    #let section-title-body = (
       if typography-small-caps-section-titles [
         #smallcaps(it.body)
       ] else [
         #it.body
       ]
     )
+    #let section-title = cvxresume-link("section_titles.text", section-title-body)
     // Vertical space above the section title
     #v(section-titles-space-above, weak: true)
 
@@ -649,11 +662,11 @@
             column-gutter: entries-space-between-columns,
             align: (end-align, start-align),
             [
-              #align(horizon, box(
+              #align(horizon, cvxresume-link("section_titles.line", box(
                 width: 1fr,
                 height: section-titles-line-thickness,
                 fill: colors-section-titles,
-              ))
+              )))
             ],
             [
               #section-title
@@ -666,31 +679,31 @@
             columns: (1fr, auto, 1fr),
             align: (bottom, center + bottom, bottom),
             column-gutter: 0.3em,
-            [#box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)],
+            [#cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))],
             [#section-title],
-            [#box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)],
+            [#cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))],
           )
         ] else if section-titles-type == "centered_with_centered_partial_line" [
           #grid(
             columns: (1fr, auto, 1fr),
             align: (horizon, center, horizon),
             column-gutter: 0.3em,
-            [#box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)],
+            [#cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))],
             [#section-title],
-            [#box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)],
+            [#cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))],
           )
         ] else if section-titles-type == "centered_with_full_line" [
           #section-title
           #v(typography-font-size-body * 0.3)
-          #box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)
+          #cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))
         ] else [
           #section-title
           #if section-titles-type == "with_partial_line" [
-            #box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)
+            #cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))
           ] else if section-titles-type == "with_full_line" [
 
             #v(typography-font-size-body * 0.3)
-            #box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles)
+            #cvxresume-link("section_titles.line", box(width: 1fr, height: section-titles-line-thickness, fill: colors-section-titles))
           ]
         ]
       ],
