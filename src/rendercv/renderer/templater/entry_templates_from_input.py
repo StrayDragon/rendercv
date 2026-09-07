@@ -229,12 +229,17 @@ def render_entry_templates[EntryType: Entry](
 def process_highlights(highlights: list[str]) -> str:
     """Convert highlight list to Markdown unordered list with nested items.
 
+    Prefix a highlight with ``!`` to emit a flush-left label line (no bullet).
+    Used by cvXresume STAR entries for the ``结果：`` heading between bullet groups.
+
     Example:
         ```py
         result = process_highlights(
             [
                 "Led team of 5 engineers",
                 "Reduced costs - Server optimization - Database indexing",
+                "!**结果：**",
+                "Latency down 50%",
             ]
         )
         # Returns:
@@ -242,6 +247,8 @@ def process_highlights(highlights: list[str]) -> str:
         # - Reduced costs
         #   - Server optimization
         #   - Database indexing
+        # **结果：**
+        # - Latency down 50%
         ```
 
     Args:
@@ -250,8 +257,13 @@ def process_highlights(highlights: list[str]) -> str:
     Returns:
         Markdown list string with nested indentation.
     """
-    highlights = ["- " + highlight.replace(" - ", "\n  - ") for highlight in highlights]
-    return "\n".join(highlights)
+    lines: list[str] = []
+    for highlight in highlights:
+        if highlight.startswith("!"):
+            lines.append(highlight[1:])
+            continue
+        lines.append("- " + highlight.replace(" - ", "\n  - "))
+    return "\n".join(lines)
 
 
 def process_authors(authors: list[str]) -> str:

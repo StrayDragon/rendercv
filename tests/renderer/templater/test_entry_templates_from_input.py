@@ -46,6 +46,10 @@ from rendercv.schema.models.locale.locale import locale_adapter
             ["Parent - Child 1", "Item 2 - Nested item"],
             "- Parent\n  - Child 1\n- Item 2\n  - Nested item",
         ),
+        (
+            ["Action", "!**结果：**", "Metric"],
+            "- Action\n**结果：**\n- Metric",
+        ),
     ],
 )
 def test_process_highlights(highlights, expected):
