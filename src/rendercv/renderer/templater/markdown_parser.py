@@ -185,6 +185,16 @@ def markdown_to_typst(markdown_string: str) -> str:
                 i += 1
             md.reset()
             result_parts.append(md.convert("\n".join(block)))
+        elif lines[i].startswith("cvxgithub:"):
+            _, payload = lines[i].split(":", 1)
+            path, url = payload.split("|", 1)
+            path = escape_typst_characters(path.strip())
+            url = url.strip()
+            result_parts.append(
+                f'#link("{url}", icon: false, if-underline: false)'
+                f'[#connection-with-icon("github")[{path}]]'
+            )
+            i += 1
         else:
             md.reset()
             result_parts.append(md.convert(lines[i]))
