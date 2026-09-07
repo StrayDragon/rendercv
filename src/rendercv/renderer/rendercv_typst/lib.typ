@@ -242,11 +242,20 @@
     let entries-summary-space-left = config.at("entries-summary-space-left")
     let entries-summary-space-above = config.at("entries-summary-space-above")
     let typography-line-spacing = config.at("typography-line-spacing")
-    cvxresume-link("entries.summary", block(
-      summary,
-      inset: directional-inset(start: entries-summary-space-left),
-      above: entries-summary-space-above + typography-line-spacing,
-    ))
+    let entries-allow-page-break = config.at("entries-allow-page-break")
+    if entries-allow-page-break {
+      cvxresume-link("entries.summary", block(
+        summary,
+        inset: directional-inset(start: entries-summary-space-left),
+        above: entries-summary-space-above + typography-line-spacing,
+        breakable: true,
+      ))
+    } else {
+      v(entries-summary-space-above + typography-line-spacing)
+      pad(left: entries-summary-space-left)[
+        #cvxresume-link("entries.summary", summary)
+      ]
+    }
   }
 }
 
