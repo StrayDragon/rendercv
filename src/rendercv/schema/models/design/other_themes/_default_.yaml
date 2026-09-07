@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=../../../../../../schema.json
-# cvXresume default: Classic 结构 + 左对齐三行表头（姓名 / 职位 / 联系方式），间距适中偏可读
+# cvXresume default: Classic 双列条目 + 居中表头，间距适中偏可读
 design:
   theme: _default_
   page:
@@ -49,13 +49,13 @@ design:
     underline: false
     show_external_link_icon: false
   header:
-    alignment: left
+    alignment: center
     photo_width: 2.05cm
     photo_position: right
     photo_space_left: 0.22cm
     photo_space_right: 0cm
     space_below_name: 0.18cm
-    space_below_headline: 0.06cm
+    space_below_headline: 0.10cm
     space_below_connections: 0.2cm
     connections:
       phone_number_format: national
@@ -75,7 +75,7 @@ design:
     space_between_text_based_entries: 0.18em
     show_time_spans_in: []
   entries:
-    date_and_location_width: 3.2cm
+    date_and_location_width: 4.4cm
     side_space: 0cm
     space_between_columns: 0.12cm
     allow_page_break: false
@@ -93,12 +93,12 @@ design:
       space_between_bullet_and_text: 0.28em
   templates:
     education_entry:
-      main_column: "**INSTITUTION**, DEGREE_WITH_AREA -- LOCATION\nSUMMARY\nHIGHLIGHTS"
-      date_and_location_column: DATE
+      main_column: "**INSTITUTION**, DEGREE_WITH_AREA\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: "LOCATION\nDATE"
       degree_column: null
     normal_entry:
-      main_column: "**NAME** -- **LOCATION**\nSUMMARY\nHIGHLIGHTS"
-      date_and_location_column: DATE
+      main_column: "**NAME**\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: "LOCATION\nDATE"
     experience_entry:
-      main_column: "**POSITION**, COMPANY -- LOCATION\nSUMMARY\nHIGHLIGHTS"
-      date_and_location_column: DATE
+      main_column: "**COMPANY**, POSITION\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: "LOCATION\nDATE"
