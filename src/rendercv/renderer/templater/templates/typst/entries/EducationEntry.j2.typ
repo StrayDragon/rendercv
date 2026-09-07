@@ -1,6 +1,5 @@
 {% if not design.entries.short_second_row %}
-{% set first_row_lines = entry.date_and_location_column.splitlines()|length %}
-{% if first_row_lines == 0 %} {% set first_row_lines = 1 %} {% endif %}
+{% set first_row_lines = 1 %}
 {% else %}
 {% set first_row_lines = entry.main_column.splitlines()|length %}
 {% endif %}

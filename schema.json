@@ -1076,6 +1076,14 @@
       "title": "EnglishLocale",
       "type": "object"
     },
+    "EntryTitleLineType": {
+      "enum": [
+        "none",
+        "partial",
+        "full"
+      ],
+      "type": "string"
+    },
     "ExactDate": {
       "anyOf": [
         {
@@ -4299,14 +4307,15 @@
           "type": "string"
         },
         "name": {
+          "default": "rgb(26, 76, 119)",
           "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `rgb(26, 76, 119)`.",
           "format": "color",
           "title": "Name",
           "type": "string"
         },
         "headline": {
-          "default": "*color_primary",
-          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `*color_primary`.",
+          "default": "rgb(26, 76, 119)",
+          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `rgb(26, 76, 119)`.",
           "format": "color",
           "title": "Headline",
           "type": "string"
@@ -4319,15 +4328,15 @@
           "type": "string"
         },
         "section_titles": {
-          "default": "*color_primary",
-          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `*color_primary`.",
+          "default": "rgb(26, 76, 119)",
+          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `rgb(26, 76, 119)`.",
           "format": "color",
           "title": "Section Titles",
           "type": "string"
         },
         "links": {
-          "default": "*color_primary",
-          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `*color_primary`.",
+          "default": "rgb(26, 76, 119)",
+          "description": "The color can be specified either with their name (https://www.w3.org/TR/SVG11/types.html#ColorKeywords), hexadecimal value, RGB value, or HSL value. The default value is `rgb(26, 76, 119)`.",
           "format": "color",
           "title": "Links",
           "type": "string"
@@ -4869,8 +4878,8 @@
         },
         "space_between_connections": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.12cm",
-          "description": "Horizontal space between contact items. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.12cm`."
+          "default": "0.16cm",
+          "description": "Horizontal space between contact items. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.16cm`."
         }
       },
       "title": "Connections",
@@ -5190,7 +5199,7 @@
       "additionalProperties": false,
       "properties": {
         "main_column": {
-          "default": "**INSTITUTION**, DEGREE_WITH_AREA -- LOCATION\nSUMMARY\nHIGHLIGHTS",
+          "default": "**INSTITUTION**, DEGREE_WITH_AREA\nSUMMARY\nHIGHLIGHTS",
           "description": "Template for education entry main column. Available placeholders:\n- `INSTITUTION`: Institution name\n- `AREA`: Field of study/major\n- `DEGREE`: Degree type (e.g., BS, PhD)\n- `DEGREE_WITH_AREA`: Locale-aware phrase combining degree and area (e.g., 'BS in Computer Science')\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `**INSTITUTION**, AREA\\nSUMMARY\\nHIGHLIGHTS`.",
           "title": "Main Column",
           "type": "string"
@@ -5209,7 +5218,7 @@
           "title": "Degree Column"
         },
         "date_and_location_column": {
-          "default": "DATE",
+          "default": "LOCATION\nDATE",
           "description": "Template for education entry date/location column. Available placeholders:\n- `INSTITUTION`: Institution name\n- `AREA`: Field of study/major\n- `DEGREE`: Degree type (e.g., BS, PhD)\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `LOCATION\\nDATE`.",
           "title": "Date And Location Column",
           "type": "string"
@@ -5484,6 +5493,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__1",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5531,6 +5545,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__9",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5541,8 +5560,8 @@
       "properties": {
         "date_and_location_width": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "3.2cm",
-          "description": "Width of the date/location column. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `3.2cm`."
+          "default": "4.4cm",
+          "description": "Width of the date/location column. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `4.4cm`."
         },
         "side_space": {
           "$ref": "#/$defs/TypstDimension",
@@ -5578,6 +5597,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__2",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5625,6 +5649,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__3",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5672,6 +5701,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__4",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5719,6 +5753,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__5",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5766,6 +5805,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__1",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5813,6 +5857,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__6",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5860,6 +5909,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__7",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5907,6 +5961,11 @@
         "highlights": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Highlights__8",
           "description": "Highlights settings."
+        },
+        "title_line_type": {
+          "$ref": "#/$defs/EntryTitleLineType",
+          "default": "none",
+          "description": "Decorative line under the first row of regular entries (project/experience title row). Use `none`, `partial` (under the title text), or `full` (span the content width). The default value is `none`."
         }
       },
       "title": "Entries",
@@ -5954,13 +6013,13 @@
       "additionalProperties": false,
       "properties": {
         "main_column": {
-          "default": "**POSITION**, COMPANY -- LOCATION\nSUMMARY\nHIGHLIGHTS",
+          "default": "**COMPANY**, POSITION\nSUMMARY\nHIGHLIGHTS",
           "description": "Template for experience entry main column. Available placeholders:\n- `COMPANY`: Company name\n- `POSITION`: Job title/position\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `**COMPANY**, POSITION\\nSUMMARY\\nHIGHLIGHTS`.",
           "title": "Main Column",
           "type": "string"
         },
         "date_and_location_column": {
-          "default": "DATE",
+          "default": "LOCATION\nDATE",
           "description": "Template for experience entry date/location column. Available placeholders:\n- `COMPANY`: Company name\n- `POSITION`: Job title/position\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `LOCATION\\nDATE`.",
           "title": "Date And Location Column",
           "type": "string"
@@ -6171,8 +6230,8 @@
       "properties": {
         "body": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "9pt",
-          "description": "The font size for body text. The default value is `9pt`."
+          "default": "8.6pt",
+          "description": "The font size for body text. The default value is `8.6pt`."
         },
         "name": {
           "$ref": "#/$defs/TypstDimension",
@@ -6186,13 +6245,13 @@
         },
         "connections": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "7.6pt",
-          "description": "The font size for connections. The default value is `7.6pt`."
+          "default": "7.8pt",
+          "description": "The font size for connections. The default value is `7.8pt`."
         },
         "section_titles": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "1.03em",
-          "description": "The font size for section titles. The default value is `1.03em`."
+          "default": "1.05em",
+          "description": "The font size for section titles. The default value is `1.05em`."
         }
       },
       "title": "FontSize",
@@ -6507,8 +6566,8 @@
       "properties": {
         "alignment": {
           "$ref": "#/$defs/Alignment",
-          "default": "left",
-          "description": "Header alignment. Options: 'left', 'center', 'right'. The default value is `left`."
+          "default": "center",
+          "description": "Header alignment. Options: 'left', 'center', 'right'. The default value is `center`."
         },
         "photo_width": {
           "$ref": "#/$defs/TypstDimension",
@@ -6537,18 +6596,18 @@
         },
         "space_below_name": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.14cm",
-          "description": "Space below your name. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.14cm`."
+          "default": "0.18cm",
+          "description": "Space below your name. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.18cm`."
         },
         "space_below_headline": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.02cm",
-          "description": "Space below the headline. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.02cm`."
+          "default": "0.10cm",
+          "description": "Space below the headline. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.10cm`."
         },
         "space_below_connections": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.14cm",
-          "description": "Space below contact information. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.14cm`."
+          "default": "0.2cm",
+          "description": "Space below contact information. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.2cm`."
         },
         "connections": {
           "$ref": "#/$defs/rendercv__schema__models__design__classic_theme__Connections__2",
@@ -7007,18 +7066,18 @@
         },
         "space_above": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.01cm",
-          "description": "Space above highlights. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.01cm`."
+          "default": "0.03cm",
+          "description": "Space above highlights. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.03cm`."
         },
         "space_between_items": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.01cm",
-          "description": "Space between highlight items. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.01cm`."
+          "default": "0.04cm",
+          "description": "Space between highlight items. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.04cm`."
         },
         "space_between_bullet_and_text": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.24em",
-          "description": "Space between bullet and text. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.24em`."
+          "default": "0.28em",
+          "description": "Space between bullet and text. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.28em`."
         }
       },
       "title": "Highlights",
@@ -7496,13 +7555,13 @@
       "additionalProperties": false,
       "properties": {
         "main_column": {
-          "default": "**NAME** -- **LOCATION**\nSUMMARY\nHIGHLIGHTS",
+          "default": "**NAME**\nSUMMARY\nHIGHLIGHTS",
           "description": "Template for normal entry main column. Available placeholders:\n- `NAME`: Entry name/title\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `**NAME**\\nSUMMARY\\nHIGHLIGHTS`.",
           "title": "Main Column",
           "type": "string"
         },
         "date_and_location_column": {
-          "default": "DATE",
+          "default": "LOCATION\nDATE",
           "description": "Template for normal entry date/location column. Available placeholders:\n- `NAME`: Entry name/title\n- `SUMMARY`: Summary text\n- `HIGHLIGHTS`: Bullet points list\n- `LOCATION`: Location text\n- `DATE`: Formatted date or date range\n\nYou can also add arbitrary keys to entries and use them as UPPERCASE placeholders.\n\nThe default value is `LOCATION\\nDATE`.",
           "title": "Date And Location Column",
           "type": "string"
@@ -7683,6 +7742,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7698,23 +7777,23 @@
         },
         "top_margin": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.34in",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.34in`."
+          "default": "0.38in",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.38in`."
         },
         "bottom_margin": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.34in",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.34in`."
+          "default": "0.38in",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.38in`."
         },
         "left_margin": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.38in",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.38in`."
+          "default": "0.42in",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.42in`."
         },
         "right_margin": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.38in",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.38in`."
+          "default": "0.42in",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.42in`."
         },
         "show_footer": {
           "default": false,
@@ -7727,6 +7806,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7771,6 +7870,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7815,6 +7934,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7859,6 +7998,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7903,6 +8062,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -7947,6 +8126,26 @@
           "description": "Show the top note at the top of the first page. The default value is `true`.",
           "title": "Show Top Note",
           "type": "boolean"
+        },
+        "show_outline": {
+          "default": false,
+          "description": "Insert a table of contents page before the CV body and register experience/project entry titles in the PDF outline. The default value is `false`.",
+          "title": "Show Outline",
+          "type": "boolean"
+        },
+        "outline_depth": {
+          "default": 3,
+          "description": "Maximum heading depth shown in the outline page. Section titles use level 2; entry titles use level 3. The default value is `3`.",
+          "maximum": 6,
+          "minimum": 1,
+          "title": "Outline Depth",
+          "type": "integer"
+        },
+        "outline_title": {
+          "default": "目录",
+          "description": "Title shown on the optional outline page. The default value is `目录`.",
+          "title": "Outline Title",
+          "type": "string"
         }
       },
       "title": "Page",
@@ -8021,13 +8220,13 @@
         },
         "space_above": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.2cm",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.2cm`."
+          "default": "0.24cm",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.24cm`."
         },
         "space_below": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.1cm",
-          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.1cm`."
+          "default": "0.12cm",
+          "description": "It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.12cm`."
         }
       },
       "title": "SectionTitles",
@@ -8371,13 +8570,13 @@
         },
         "space_between_regular_entries": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.45em",
-          "description": "Vertical space between entries. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.45em`."
+          "default": "0.52em",
+          "description": "Vertical space between entries. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.52em`."
         },
         "space_between_text_based_entries": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.12em",
-          "description": "Vertical space between text-based entries. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.12em`."
+          "default": "0.18em",
+          "description": "Vertical space between text-based entries. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.18em`."
         },
         "show_time_spans_in": {
           "default": [],
@@ -8940,8 +9139,8 @@
       "properties": {
         "space_above": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0cm",
-          "description": "Space above summary text. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0cm`."
+          "default": "0.04cm",
+          "description": "Space above summary text. It can be specified with units (cm, in, pt, mm, em). For example, `0.1cm`. The default value is `0.04cm`."
         },
         "space_left": {
           "$ref": "#/$defs/TypstDimension",
@@ -9733,8 +9932,8 @@
       "properties": {
         "line_spacing": {
           "$ref": "#/$defs/TypstDimension",
-          "default": "0.48em",
-          "description": "Space between lines of text. Larger values create more vertical space. The default value is `0.48em`."
+          "default": "0.52em",
+          "description": "Space between lines of text. Larger values create more vertical space. The default value is `0.52em`."
         },
         "alignment": {
           "default": "left",

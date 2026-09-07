@@ -200,6 +200,10 @@ def render_entry_templates[EntryType: Entry](
         # have no URL field. The ty:ignore is due to Entry = EntryModel | str union.
         entry_fields["URL"] = process_url(entry)  # ty: ignore[invalid-argument-type]
 
+    if any("LINK" in template for template in entry_templates.values()):
+        if hasattr(entry, "url") and entry.url:
+            entry_fields["LINK"] = process_link(entry)  # ty: ignore[invalid-argument-type]
+
     if "DOI" in entry_fields:
         # Same as above: entry is an EntryModel with doi/url fields.
         entry_fields["URL"] = process_url(entry)  # ty: ignore[invalid-argument-type]
@@ -391,6 +395,20 @@ def process_url(entry: Entry) -> str:
         url = str(entry.url)
         return f"[{clean_url(url)}]({url})"
     raise RenderCVInternalError("URL is not provided for this entry.")
+
+
+def process_link(entry: Entry) -> str:
+    """Format entry URL for the right column with optional custom label.
+
+    Uses ``link_label`` when provided; otherwise falls back to ``process_url``.
+    """
+    if not hasattr(entry, "url") or not entry.url:
+        raise RenderCVInternalError("LINK is not provided for this entry.")
+    url = str(entry.url)
+    link_label = getattr(entry, "link_label", None)
+    if isinstance(link_label, str) and link_label.strip():
+        return f"[{link_label.strip()}]({url})"
+    return process_url(entry)  # ty: ignore[invalid-argument-type]
 
 
 def process_doi(entry: Entry) -> str:

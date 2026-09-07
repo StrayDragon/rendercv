@@ -82,8 +82,11 @@ def process_model(
     string_processors: list[Callable[[str], str]] = [
         lambda string: make_keywords_bold(string, rendercv_model.settings.bold_keywords)
     ]
+    keyword_bold_processor = string_processors[0]
+    content_processors: list[Callable[[str], str]] = []
     if file_type == "typst":
-        string_processors.extend([markdown_to_typst])
+        content_processors.append(markdown_to_typst)
+        string_processors.append(markdown_to_typst)
 
     rendercv_model.cv._plain_name = rendercv_model.cv.name
     rendercv_model.cv.name = apply_string_processors(
@@ -143,13 +146,22 @@ def process_model(
                 show_time_span=show_time_span,
                 current_date=rendercv_model.settings._resolved_current_date,
             )
-            section.entries[i] = process_fields(processed_entry, string_processors)
+            section.entries[i] = process_fields(
+                processed_entry,
+                string_processors,
+                keyword_bold_processor=keyword_bold_processor,
+                content_processors=content_processors,
+            )
 
     return rendercv_model
 
 
 def process_fields(
-    entry: Entry, string_processors: list[Callable[[str], str]]
+    entry: Entry,
+    string_processors: list[Callable[[str], str]],
+    *,
+    keyword_bold_processor: Callable[[str], str] | None = None,
+    content_processors: list[Callable[[str], str]] | None = None,
 ) -> Entry:
     """Apply string processors to all entry fields except skipped technical fields.
 
@@ -161,31 +173,58 @@ def process_fields(
     Args:
         entry: Entry to process (model or string).
         string_processors: Transformation functions to apply.
+        keyword_bold_processor: Optional keyword-bolding function applied only to
+            content fields (summary, highlights, etc.).
+        content_processors: Optional processors for content fields. When omitted,
+            ``string_processors`` is used for every non-skipped field.
 
     Returns:
         Entry with processed fields.
     """
     skipped = {"start_date", "end_date", "doi", "url"}
+    keyword_bold_skipped = {
+        "name",
+        "company",
+        "position",
+        "location",
+        "link_label",
+        "outline_name",
+        "main_column",
+        "date_and_location_column",
+        "degree_column",
+    }
+    if keyword_bold_processor is None and content_processors is None:
+        keyword_bold_processor = string_processors[0] if string_processors else None
+        content_processors = string_processors[1:] if len(string_processors) > 1 else []
 
     if isinstance(entry, str):
-        return apply_string_processors(entry, string_processors)
+        processors = ([keyword_bold_processor] if keyword_bold_processor else []) + (
+            content_processors or []
+        )
+        return apply_string_processors(entry, processors)
 
     data = entry.model_dump(exclude_none=True)
     for field, value in data.items():
         if field in skipped or field.startswith("_"):
             continue
 
+        processors: list[Callable[[str], str]] = []
+        if field not in keyword_bold_skipped and keyword_bold_processor is not None:
+            processors.append(keyword_bold_processor)
+        if content_processors:
+            processors.extend(content_processors)
+
         if isinstance(value, str):
-            setattr(entry, field, apply_string_processors(value, string_processors))
+            setattr(entry, field, apply_string_processors(value, processors))
         elif isinstance(value, list):
             setattr(
                 entry,
                 field,
-                [apply_string_processors(v, string_processors) for v in value],
+                [apply_string_processors(v, processors) for v in value],
             )
-        else:
+        elif processors:
             setattr(
-                entry, field, apply_string_processors(str(value), string_processors)
+                entry, field, apply_string_processors(str(value), processors)
             )
 
     return entry

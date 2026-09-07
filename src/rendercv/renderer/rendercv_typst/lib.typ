@@ -259,14 +259,24 @@
   }
 }
 
-#let regular-entry(main-column, date-and-location-column, main-column-second-row: none) = {
+#let regular-entry(
+  main-column,
+  date-and-location-column,
+  main-column-second-row: none,
+  outline-title: none,
+) = {
   metadata("skip-content-area")
 
   context {
     let config = rendercv-config.get()
     let section-titles-type = config.at("section-titles-type")
+    let section-titles-line-thickness = config.at("section-titles-line-thickness")
+    let colors-section-titles = config.at("colors-section-titles")
+    let typography-font-size-body = config.at("typography-font-size-body")
     let entries-date-and-location-width = config.at("entries-date-and-location-width")
     let entries-space-between-columns = config.at("entries-space-between-columns")
+    let entries-title-line-type = config.at("entries-title-line-type")
+    let page-show-entry-outline = config.at("page-show-entry-outline")
     let entries-highlights-bullet = config.at("entries-highlights-bullet")
     let entries-highlights-nested-bullet = config.at("entries-highlights-nested-bullet")
     let entries-highlights-space-between-items = config.at(
@@ -319,6 +329,11 @@
     } else {
       main-column-second-row
     }
+    if page-show-entry-outline and outline-title != none and repr(outline-title) != "[ ]" {
+      hide[
+        heading(level: 3, outlined: true)[#outline-title]
+      ]
+    }
     cvxresume-link(
       "entries",
       block(
@@ -339,12 +354,44 @@
             )
           } else {
             if repr(main-column) != "[ ]" or repr(date-and-location-column) != "[ ]" {
-              grid(
-                columns: (1fr, entries-date-and-location-width),
-                column-gutter: entries-space-between-columns,
-                align: (start-align, typography-date-and-location-column-alignment),
-                cvx-main-column, cvx-date-and-location-column,
-              )
+              if entries-title-line-type == "partial" {
+                grid(
+                  columns: (1fr, entries-date-and-location-width),
+                  column-gutter: entries-space-between-columns,
+                  align: (start-align, typography-date-and-location-column-alignment),
+                  [
+                    #cvx-main-column
+                    #v(typography-font-size-body * 0.25, weak: true)
+                    #cvxresume-link(
+                      "entries.title_line",
+                      box(
+                        width: 100%,
+                        height: section-titles-line-thickness,
+                        fill: colors-section-titles,
+                      ),
+                    )
+                  ],
+                  [#cvx-date-and-location-column],
+                )
+              } else {
+                grid(
+                  columns: (1fr, entries-date-and-location-width),
+                  column-gutter: entries-space-between-columns,
+                  align: (start-align, typography-date-and-location-column-alignment),
+                  cvx-main-column, cvx-date-and-location-column,
+                )
+                if entries-title-line-type == "full" {
+                  v(typography-font-size-body * 0.25, weak: true)
+                  cvxresume-link(
+                    "entries.title_line",
+                    box(
+                      width: 100%,
+                      height: section-titles-line-thickness,
+                      fill: colors-section-titles,
+                    ),
+                  )
+                }
+              }
             }
             set align(start-align)
             cvx-main-column-second-row
@@ -422,6 +469,10 @@
   page-right-margin: 0.7in,
   page-show-footer: true,
   page-show-top-note: true,
+  page-show-outline: false,
+  page-outline-depth: 3,
+  page-outline-title: "目录",
+  page-show-entry-outline: false,
   colors-body: rgb(0, 0, 0),
   colors-name: rgb(0, 79, 144),
   colors-headline: rgb(0, 79, 144),
@@ -485,6 +536,7 @@
   entries-highlights-space-above: 0.12cm,
   entries-highlights-space-between-items: 0.12cm,
   entries-highlights-space-between-bullet-and-text: 0.5em,
+  entries-title-line-type: "none",
   date: datetime(
     year: 2025,
     month: 12,
@@ -579,6 +631,11 @@
     entries-highlights-space-between-items: entries-highlights-space-between-items,
     entries-highlights-space-between-bullet-and-text: entries-highlights-space-between-bullet-and-text,
     entries-degree-width: entries-degree-width,
+    entries-title-line-type: entries-title-line-type,
+    page-show-outline: page-show-outline,
+    page-outline-depth: page-outline-depth,
+    page-outline-title: page-outline-title,
+    page-show-entry-outline: page-show-entry-outline,
     // Internal computed values
     justify: justify,
   ))
@@ -767,6 +824,14 @@
   }
 
   #set par(spacing: 0cm)
+
+  #if page-show-outline [
+    #outline(
+      title: page-outline-title,
+      depth: page-outline-depth,
+    )
+    #pagebreak()
+  ]
 
   #let grouped = group-sections(doc)
 

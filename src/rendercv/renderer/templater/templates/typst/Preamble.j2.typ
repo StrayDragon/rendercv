@@ -16,6 +16,10 @@
   page-right-margin: {{ design.page.right_margin }},
   page-show-footer: {{ design.page.show_footer|lower }},
   page-show-top-note: {{ design.page.show_top_note|lower }},
+  page-show-outline: {{ design.page.show_outline|lower }},
+  page-outline-depth: {{ design.page.outline_depth }},
+  page-outline-title: "{{ design.page.outline_title }}",
+  page-show-entry-outline: {{ design.page.show_outline|lower }},
   colors-body: {{ design.colors.body.as_rgb() }},
   colors-name: {{ design.colors.name.as_rgb() }},
   colors-headline: {{ design.colors.headline.as_rgb() }},
@@ -79,6 +83,7 @@
   entries-highlights-space-above: {{ design.entries.highlights.space_above }},
   entries-highlights-space-between-items: {{ design.entries.highlights.space_between_items }},
   entries-highlights-space-between-bullet-and-text: {{ design.entries.highlights.space_between_bullet_and_text }},
+  entries-title-line-type: "{{ design.entries.title_line_type }}",
   date: datetime(
     year: {{ settings._resolved_current_date.year }},
     month: {{ settings._resolved_current_date.month }},

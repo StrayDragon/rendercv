@@ -52,6 +52,27 @@ class Page(BaseModelWithoutExtraKeys):
             " `true`."
         ),
     )
+    show_outline: bool = pydantic.Field(
+        default=False,
+        description=(
+            "Insert a table of contents page before the CV body and register"
+            " experience/project entry titles in the PDF outline. The default value"
+            " is `false`."
+        ),
+    )
+    outline_depth: int = pydantic.Field(
+        default=3,
+        ge=1,
+        le=6,
+        description=(
+            "Maximum heading depth shown in the outline page. Section titles use"
+            " level 2; entry titles use level 3. The default value is `3`."
+        ),
+    )
+    outline_title: str = pydantic.Field(
+        default="目录",
+        description="Title shown on the optional outline page. The default value is `目录`.",
+    )
 
 
 # Colors
@@ -590,6 +611,9 @@ class Highlights(BaseModelWithoutExtraKeys):
     )
 
 
+type EntryTitleLineType = Literal["none", "partial", "full"]
+
+
 class Entries(BaseModelWithoutExtraKeys):
     date_and_location_width: TypstDimension = pydantic.Field(
         default="4.15cm",
@@ -644,6 +668,14 @@ class Entries(BaseModelWithoutExtraKeys):
     highlights: Highlights = pydantic.Field(
         default_factory=Highlights,
         description="Highlights settings.",
+    )
+    title_line_type: EntryTitleLineType = pydantic.Field(
+        default="none",
+        description=(
+            "Decorative line under the first row of regular entries (project/experience"
+            " title row). Use `none`, `partial` (under the title text), or `full` (span"
+            " the content width). The default value is `none`."
+        ),
     )
 
 
