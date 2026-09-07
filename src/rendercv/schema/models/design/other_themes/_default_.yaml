@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../schema.json
+# cvXresume default: Classic 结构 + 左对齐三行表头（姓名 / 职位 / 联系方式），间距适中偏可读
+design:
+  theme: _default_
+  page:
+    size: a4
+    top_margin: 0.38in
+    bottom_margin: 0.38in
+    left_margin: 0.42in
+    right_margin: 0.42in
+    show_footer: false
+    show_top_note: false
+  colors:
+    body: rgb(28, 28, 28)
+    name: rgb(26, 76, 119)
+    headline: rgb(26, 76, 119)
+    connections: rgb(120, 120, 120)
+    section_titles: rgb(26, 76, 119)
+    links: rgb(26, 76, 119)
+    footer: rgb(120, 120, 120)
+    top_note: rgb(120, 120, 120)
+  typography:
+    line_spacing: 0.52em
+    alignment: left
+    date_and_location_column_alignment: right
+    font_family:
+      body: MiSans
+      name: MiSans
+      headline: MiSans
+      connections: MiSans
+      section_titles: MiSans
+    font_size:
+      body: 8.6pt
+      name: 18pt
+      headline: 9pt
+      connections: 7.8pt
+      section_titles: 1.05em
+    small_caps:
+      name: false
+      headline: false
+      connections: false
+      section_titles: false
+    bold:
+      name: true
+      headline: false
+      connections: false
+      section_titles: true
+  links:
+    underline: false
+    show_external_link_icon: false
+  header:
+    alignment: left
+    photo_width: 2.05cm
+    photo_position: right
+    photo_space_left: 0.22cm
+    photo_space_right: 0cm
+    space_below_name: 0.18cm
+    space_below_headline: 0.06cm
+    space_below_connections: 0.2cm
+    connections:
+      phone_number_format: national
+      hyperlink: true
+      show_icons: true
+      display_urls_instead_of_usernames: false
+      separator: ·
+      space_between_connections: 0.16cm
+  section_titles:
+    type: with_full_line
+    line_thickness: 0.45pt
+    space_above: 0.24cm
+    space_below: 0.12cm
+  sections:
+    allow_page_break: true
+    space_between_regular_entries: 0.52em
+    space_between_text_based_entries: 0.18em
+    show_time_spans_in: []
+  entries:
+    date_and_location_width: 3.2cm
+    side_space: 0cm
+    space_between_columns: 0.12cm
+    allow_page_break: false
+    short_second_row: false
+    degree_width: 1.1cm
+    summary:
+      space_above: 0.04cm
+      space_left: 0cm
+    highlights:
+      bullet: •
+      nested_bullet: •
+      space_left: 0cm
+      space_above: 0.03cm
+      space_between_items: 0.04cm
+      space_between_bullet_and_text: 0.28em
+  templates:
+    education_entry:
+      main_column: "**INSTITUTION**, DEGREE_WITH_AREA -- LOCATION\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: DATE
+      degree_column: null
+    normal_entry:
+      main_column: "**NAME** -- **LOCATION**\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: DATE
+    experience_entry:
+      main_column: "**POSITION**, COMPANY -- LOCATION\nSUMMARY\nHIGHLIGHTS"
+      date_and_location_column: DATE
