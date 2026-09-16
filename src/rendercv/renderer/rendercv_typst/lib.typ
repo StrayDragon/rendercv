@@ -7,6 +7,17 @@
 #let cvxresume-studio = sys.inputs.at("cvxresume_studio", default: "0") == "1"
 #let cvxresume-studio-detail = sys.inputs.at("cvxresume_studio_detail", default: "0") == "1"
 #let cvxresume-link(kind, body) = if cvxresume-studio { link("cvxresume://" + kind, body) } else { body }
+#let cvxresume-cover-banner-hidden-titles = (
+  "cover-banner",
+  "Cover-banner",
+  "__cvxresume_cover_banner__",
+  "cvxresume_cover_banner",
+  "Cvxresume Cover Banner",
+)
+#let is-cvxresume-cover-banner-section(title-text) = {
+  let trimmed = title-text.trim()
+  cvxresume-cover-banner-hidden-titles.contains(trimmed)
+}
 
 // Direction-aware inset: maps logical start/end to physical left/right.
 // Must be called from within a `context` scope.
@@ -256,6 +267,50 @@
         #cvxresume-link("entries.summary", summary)
       ]
     }
+  }
+}
+
+#let cover-banner-entry(title: none, subtitle: none, cta: none) = {
+  metadata("skip-content-area")
+
+  context {
+    let config = rendercv-config.get()
+    let colors-section-titles = config.at("colors-section-titles")
+    let colors-body = config.at("colors-body")
+    let typography-font-family-section-titles = config.at("typography-font-family-section-titles")
+    let typography-font-size-body = config.at("typography-font-size-body")
+    let typography-font-size-section-titles = config.at("typography-font-size-section-titles")
+    let section-titles-space-below = config.at("section-titles-space-below")
+    let sections-space-between-text-based-entries = config.at("sections-space-between-text-based-entries")
+
+    block(
+      width: 100%,
+      breakable: false,
+      inset: (top: 0.15cm, bottom: 0.1cm),
+      [
+        #align(center)[
+          #text(
+            font: typography-font-family-section-titles,
+            size: typography-font-size-section-titles * 1.85,
+            weight: 700,
+            fill: colors-section-titles,
+          )[#title]
+        ]
+        #if subtitle != none and repr(subtitle) != "[ ]" [
+          #v(0.22cm)
+          #align(center)[
+            #text(size: typography-font-size-body, fill: colors-body)[#subtitle]
+          ]
+        ]
+        #if cta != none and repr(cta) != "[ ]" [
+          #v(0.28cm)
+          #align(center)[
+            #text(size: typography-font-size-body * 1.15, weight: 700)[#cta]
+          ]
+        ]
+      ],
+    )
+    v(section-titles-space-below + sections-space-between-text-based-entries, weak: true)
   }
 }
 
@@ -698,7 +753,12 @@
   ])
 
   // Section titles:
-  #show heading.where(level: 2): it => cvxresume-link("section_titles", [
+  #show heading.where(level: 2): it => {
+    let title-text = if it.body.func() == text { it.body.text } else { repr(it.body) }
+    if is-cvxresume-cover-banner-section(title-text) {
+      []
+    } else {
+      cvxresume-link("section_titles", [
     #let is-centered = section-titles-type in ("centered_without_line", "centered_with_partial_line", "centered_with_centered_partial_line", "centered_with_full_line")
     #set align(if is-centered { center } else { start-align })
     #set text(size: (1em / 1.2)) // reset
@@ -779,6 +839,8 @@
     // Vertical space after the section title
     #v(section-titles-space-below - 0.5em)
   ])
+    }
+  }
 
   // Top note:
   #if page-show-top-note and top-note != none and top-note != "" {
@@ -855,7 +917,14 @@
       key in sections-page-break-before
     } else { false }
     #if should-page-break [#pagebreak()]
-    #section-title
+    #let section-title-text = if section-title.body.func() == text {
+      section-title.body.text
+    } else {
+      repr(section-title.body)
+    }
+    #if not is-cvxresume-cover-banner-section(section-title-text) [
+      #section-title
+    ]
     #let should-skip = {
       let skip = false
       if section-content != none and section-content.has("children") {

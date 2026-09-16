@@ -8,6 +8,7 @@ import pydantic_core
 
 from ...pydantic_error_handling import CustomPydanticErrorTypes
 from ..base import BaseModelWithoutExtraKeys
+from .entries.banner import BannerEntry
 from .entries.bullet import BulletEntry
 from .entries.education import EducationEntry
 from .entries.experience import ExperienceEntry
@@ -22,7 +23,8 @@ from .entries.reversed_numbered import ReversedNumberedEntry
 
 # str is an entry type (TextEntry) but not a model, so it's not included in EntryModel.
 type EntryModel = (
-    OneLineEntry
+    BannerEntry
+    | OneLineEntry
     | NormalEntry
     | ExperienceEntry
     | EducationEntry
@@ -146,6 +148,10 @@ def get_entry_type_name_and_section_model(
     """
 
     if isinstance(entry, dict):
+        banner_kind = entry.get("banner_kind")
+        if banner_kind == "cover":
+            return "BannerEntry", section_models[BannerEntry]
+
         entry_type_name = None
         section_model = None
         for EntryType, characteristic_fields in characteristic_entry_fields.items():
@@ -256,6 +262,9 @@ type Section = Annotated[
 ]
 
 
+CVXRESUME_COVER_BANNER_SECTION_KEY = "cover-banner"
+
+
 def dictionary_key_to_proper_section_title(key: str) -> str:
     """Convert snake_case section key to title case with proper capitalization.
 
@@ -276,6 +285,9 @@ def dictionary_key_to_proper_section_title(key: str) -> str:
     Returns:
         Properly capitalized section title.
     """
+    if key == CVXRESUME_COVER_BANNER_SECTION_KEY:
+        return key
+
     # If there is either a space or an uppercase letter in the key, return it as is.
     if " " in key or any(letter.isupper() for letter in key):
         return key
